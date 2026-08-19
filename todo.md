@@ -214,3 +214,18 @@
 - [x] Show pricing, compare-at pricing, and database-backed stock availability for each product.
 - [x] Refresh product-card and catalog-section UI styling while preserving checkout behavior.
 - [x] Add tests, verify responsive pages, and save a checkpoint.
+
+# New storefront promotion and catalog seeding
+
+- [x] Add a new promotional banner to the storefront.
+- [x] Add a featured-products section to the storefront.
+- [x] Seed the empty catalog with representative Agri Farm and Dairy Farm products.
+- [x] Add or update Vitest coverage for the seeded catalog and featured-product behavior.
+- [x] Verify the updated storefront at desktop and mobile widths.
+
+# Featured section behavior validation follow-up
+
+- [x] Add a rendered homepage test for live seeded featured products and empty-catalog fallback behavior.
+- [x] Re-run focused validation and document the separate Razorpay credential-test blocker.
+
+> Validation note: the focused storefront, catalog, rendered homepage, and TypeScript checks pass. The separate `server/razorpay.credentials.test.ts` remains blocked because this copy does not have `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`; no payment credentials were changed or exposed.

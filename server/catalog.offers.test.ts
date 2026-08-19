@@ -13,9 +13,18 @@ describe("catalog offers", () => {
     expect(["Farm Fresh Whole Milk", "Fresh Curd", "Table Butter", "Fresh Paneer", "Pure Cow Ghee", "Traditional Milk Sweets"].every((name) => dairy.some((product) => product.name === name))).toBe(true);
   });
 
+  it("seeds representative sample products for both businesses", async () => {
+    const [agri, dairy] = await Promise.all([getProductsByBusiness("agri"), getProductsByBusiness("dairy")]);
+    expect(agri.some((product) => product.name === "NeemShield Botanical Concentrate" && product.stockQuantity > 0)).toBe(true);
+    expect(agri.some((product) => product.category === "Fresh fruits")).toBe(true);
+    expect(dairy.some((product) => product.name === "Daily Cow Milk" && product.stockQuantity > 0)).toBe(true);
+    expect(dairy.some((product) => product.category === "Ice cream & sweets")).toBe(true);
+  });
+
   it("keeps the new catalog controls and promotional sections in both farm pages", () => {
     const agri = readFileSync(new URL("../client/src/pages/AgriFarm.tsx", import.meta.url), "utf8");
     const dairy = readFileSync(new URL("../client/src/pages/DairyFarm.tsx", import.meta.url), "utf8");
+    const home = readFileSync(new URL("../client/src/pages/Home.tsx", import.meta.url), "utf8");
     for (const page of [agri, dairy]) {
       expect(page).toContain("Sort: Featured");
       expect(page).toContain("Most available");
@@ -24,5 +33,8 @@ describe("catalog offers", () => {
     }
     expect(agri).toContain("Freshness for the week.");
     expect(dairy).toContain("Good dairy belongs in the everyday.");
+    expect(home).toContain("Fresh starts for every farm.");
+    expect(home).toContain("Featured farm picks");
+    expect(home).toContain("trpc.products.all.useQuery");
   });
 });

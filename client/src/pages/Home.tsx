@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { aggregateCartItems } from "@/lib/checkout";
@@ -50,6 +50,23 @@ const products: Product[] = [
 
 const categories = ["All products", "Organic crop care", "Crop protection", "Soil & nutrition", "Dairy essentials"];
 
+export function mapFeaturedProducts(catalogProducts: Array<{ id: number; name: string; category: string; priceInr: number; offerLabel: string | null; label: string; imageUrl: string; note: string; business: "agri" | "dairy"; pack: string }> | undefined, fallback: Product[]): Product[] {
+  const seeded = (catalogProducts ?? []).slice(0, 4).map((product) => ({
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    price: `₹${product.priceInr}`,
+    pack: product.pack,
+    label: product.offerLabel ?? product.label,
+    tone: product.business === "dairy" ? "cream" : "olive",
+    icon: product.business === "dairy" ? "🥛" : "🌿",
+    image: product.imageUrl,
+    use: product.note,
+    suitability: product.business === "dairy" ? "Dairy essential" : "Farm input",
+  }));
+  return seeded.length ? seeded : fallback;
+}
+
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All products");
   const [query, setQuery] = useState("");
@@ -61,6 +78,8 @@ export default function Home() {
   const [gatewayError, setGatewayError] = useState<string | null>(null);
   const checkoutOrder = trpc.orders.checkout.useMutation();
   const verifyPayment = trpc.orders.verifyPayment.useMutation();
+  const { data: catalogProducts } = trpc.products.all.useQuery(undefined, { refetchOnMount: "always" });
+  const featuredProducts = useMemo(() => mapFeaturedProducts(catalogProducts, products), [catalogProducts]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -166,6 +185,24 @@ export default function Home() {
           <div className="container grid grid-cols-2 divide-x divide-[#d9d4c8] md:grid-cols-4">
             {[{ icon: <Leaf size={22} />, title: "Organic crop care", text: "Plant-first solutions" }, { icon: <ShieldCheck size={22} />, title: "Crop protection", text: "Defend every acre" }, { icon: <Sparkles size={22} />, title: "Soil & nutrition", text: "Build better ground" }, { icon: <Truck size={22} />, title: "India-wide delivery", text: "Doorstep, pan-India" }].map((item) => <div key={item.title} className="flex items-center gap-3 px-4 py-5 md:px-7"><div className="text-[#b84f35]">{item.icon}</div><div><p className="text-xs font-extrabold text-[#203c2b]">{item.title}</p><p className="mt-1 text-[11px] text-[#7b806f]">{item.text}</p></div></div>)}
           </div>
+        </section>
+
+        <section aria-labelledby="seasonal-offer-title" className="container py-10 md:py-14">
+          <div className="relative overflow-hidden rounded-[30px] bg-[#b84f35] px-7 py-10 text-[#fffdf8] shadow-[0_20px_50px_rgba(94,54,35,.18)] md:px-12 md:py-14">
+            <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full border-[34px] border-[#e9b65f]/45" />
+            <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-[100px] bg-[#d5962b]/55" />
+            <div className="relative max-w-[650px]">
+              <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#ffd58a]">New season edit · Field to table</p>
+              <h2 id="seasonal-offer-title" className="mt-4 font-serif text-4xl font-bold leading-[.94] tracking-[-.06em] md:text-6xl">Fresh starts for every farm.</h2>
+              <p className="mt-5 max-w-[540px] text-sm leading-6 text-[#fff0df] md:text-base">Build your next basket with dependable crop inputs and everyday dairy essentials, selected for the season ahead and ready to ship across India.</p>
+              <div className="mt-7 flex flex-wrap gap-3"><a href="#featured-products" className="inline-flex items-center gap-2 rounded-full bg-[#fffdf8] px-5 py-3 text-sm font-extrabold text-[#203c2b] transition hover:bg-[#f5e9d3]">See featured picks <ArrowRight size={16} /></a><a href="/shop" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10">Browse all products</a></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="featured-products" className="container pb-12 md:pb-18" aria-labelledby="featured-products-title">
+          <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#b84f35]">Handpicked for this week</p><h2 id="featured-products-title" className="font-serif text-4xl font-bold tracking-[-0.06em] text-[#203c2b] md:text-5xl">Featured farm picks</h2></div><p className="max-w-[320px] text-sm leading-6 text-[#657164]">A balanced starting basket from the live catalog — crop care, soil nutrition, and dairy staples.</p></div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{featuredProducts.map((product) => <article key={`featured-${product.id}`} className="group overflow-hidden rounded-[24px] border border-[#ded9ce] bg-[#fffdf8] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(49,59,43,.12)]"><div className="relative aspect-[1.2] overflow-hidden bg-[#e7dfcf]"><img src={product.image} alt={product.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /><div className="absolute inset-0 bg-gradient-to-t from-[#203c2b]/50 via-transparent to-transparent" /><span className="absolute left-4 top-4 rounded-full bg-[#fffdf8]/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#506154]">{product.label}</span></div><div className="p-5"><p className="text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#b84f35]">{product.category}</p><h3 className="mt-2 min-h-[44px] font-serif text-[20px] font-bold leading-[1.05] tracking-[-0.03em] text-[#203c2b]">{product.name}</h3><div className="mt-4 flex items-end justify-between gap-3"><div><p className="text-lg font-extrabold text-[#203c2b]">{product.price}</p><p className="mt-0.5 text-[11px] text-[#8a8d7f]">{product.pack}</p></div><button onClick={() => addToCart(product)} className="rounded-full bg-[#203c2b] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2d563d] active:scale-95">Add</button></div></div></article>)}</div>
         </section>
 
         <section id="shop" className="container py-20 md:py-28">
