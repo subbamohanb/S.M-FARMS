@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { attachRazorpayOrderId, createPendingOrder, getAdminDashboardData, getAllProducts,   getCustomerTransactionHistory,
+import { attachRazorpayOrderId, createPendingOrder, getAdminDashboardData, getAllProducts, getProductById,   getCustomerTransactionHistory,
   getOrderForTracking,
   getCodInvoice, getProductsByBusiness, markOrderPaid, regenerateTrackingToken, registerPushToken, updateAdminOrder, updateAdminProductInventory } from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -16,6 +16,7 @@ const checkoutInput = z.object({
   customerEmail: z.string().trim().email().max(320).optional(),
   customerPhone: z.string().trim().max(32).optional(),
   paymentMethod: z.enum(["razorpay", "cod"]).default("razorpay"),
+  deliverySlot: z.enum(["Morning · 7:00–10:00", "Midday · 11:00–14:00", "Evening · 17:00–20:00"]).optional(),
 });
 
 const adminOrderInput = z.object({
@@ -41,6 +42,9 @@ export const appRouter = router({
     byBusiness: publicProcedure
       .input(z.object({ business: z.enum(["agri", "dairy"]) }))
       .query(({ input }) => getProductsByBusiness(input.business)),
+    byId: publicProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .query(({ input }) => getProductById(input.id)),
   }),
   orders: router({
     createPending: publicProcedure.input(checkoutInput).mutation(({ input }) => createPendingOrder(input)),
@@ -52,7 +56,7 @@ export const appRouter = router({
     checkout: publicProcedure.input(checkoutInput).mutation(async ({ input }) => {
       const pending = await createPendingOrder(input);
       if (input.paymentMethod === "cod") {
-        return { mode: "cod" as const, localOrderId: pending.orderId, amountInr: pending.amountInr, items: pending.items, invoiceToken: pending.invoiceToken, invoiceTokenExpiresAt: pending.invoiceTokenExpiresAt };
+        return { mode: "cod" as const, localOrderId: pending.orderId, amountInr: pending.amountInr, items: pending.items, deliverySlot: pending.deliverySlot, invoiceToken: pending.invoiceToken, invoiceTokenExpiresAt: pending.invoiceTokenExpiresAt };
       }
       try {
         const razorpay = await createRazorpayOrder({ amountInr: pending.amountInr, receipt: `smf_${pending.orderId}` });

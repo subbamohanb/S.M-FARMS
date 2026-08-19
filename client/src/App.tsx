@@ -12,6 +12,7 @@ import TrackOrder from "./pages/TrackOrder";
 import TransactionHistory from "./pages/TransactionHistory";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Profile from "./pages/Profile";
+import ProductDetail from "./pages/ProductDetail";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/agri-farm" component={AgriFarm} />
       <Route path="/dairy-farm" component={DairyFarm} />
       <Route path="/shop" component={Shop} />
+      <Route path="/product/:id" component={ProductDetail} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/track-order" component={TrackOrder} />
       <Route path="/transactions" component={TransactionHistory} />

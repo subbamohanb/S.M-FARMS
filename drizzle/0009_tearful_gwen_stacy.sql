@@ -1,0 +1,3 @@
+ALTER TABLE `products` MODIFY COLUMN `ingredients` varchar(500) NOT NULL DEFAULT 'See product label for complete ingredients.';--> statement-breakpoint
+ALTER TABLE `products` MODIFY COLUMN `storageInstructions` varchar(300) NOT NULL DEFAULT 'Store in a cool, dry place away from direct sunlight.';--> statement-breakpoint
+ALTER TABLE `products` MODIFY COLUMN `usageGuidance` varchar(500) NOT NULL DEFAULT 'Follow the product label and use only as directed.';

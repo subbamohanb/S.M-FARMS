@@ -229,3 +229,20 @@
 - [x] Re-run focused validation and document the separate Razorpay credential-test blocker.
 
 > Validation note: the focused storefront, catalog, rendered homepage, and TypeScript checks pass. The separate `server/razorpay.credentials.test.ts` remains blocked because this copy does not have `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`; no payment credentials were changed or exposed.
+
+# Product details, catalog navigation, and delivery slots
+
+- [x] Add product-detail pages for every catalog item with ingredients, storage instructions, and usage guidance.
+- [x] Add product-detail routes and storefront links from catalog cards.
+- [x] Implement filtering and sorting controls for the new product catalog across storefront views.
+- [x] Add delivery-slot selection during checkout for carts containing fresh or chilled products.
+- [x] Persist and validate the selected delivery slot through order creation and confirmation flows.
+- [x] Add tests and verify product details, catalog controls, checkout delivery slots, and responsive layouts.
+
+# Cross-storefront delivery and validation follow-up
+
+- [x] Add product-detail links to Agri Farm, Dairy Farm, and homepage catalog cards.
+- [x] Derive Shop categories from the live catalog and test filtering and sorting behavior.
+- [x] Add delivery-slot selection to Home, Agri Farm, and Dairy Farm checkout surfaces.
+- [x] Enforce delivery-slot requirements server-side for fresh/chilled carts and carry the slot through confirmation.
+- [x] Add rendered/integration coverage for product details, catalog controls, delivery-slot validation, and mobile checkout verification.
