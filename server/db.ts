@@ -120,13 +120,6 @@ export async function getAllProducts() {
   return db.select().from(products).where(eq(products.isActive, 1)).orderBy(asc(products.id));
 }
 
-export async function getProductById(productId: number) {
-  const db = await getDb();
-  if (!db) return undefined;
-  const result = await db.select().from(products).where(and(eq(products.id, productId), eq(products.isActive, 1))).limit(1);
-  return result[0];
-}
-
 export type PendingOrderItemInput = { productId: number; quantity: number };
 
 export function buildOrderLines(items: PendingOrderItemInput[], catalog: Product[]) {
@@ -309,17 +302,14 @@ export async function createPendingOrder(input: {
   customerEmail?: string;
   customerPhone?: string;
   paymentMethod?: "razorpay" | "cod";
-  deliverySlot?: "Morning · 7:00–10:00" | "Midday · 11:00–14:00" | "Evening · 17:00–20:00";
 }) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
   if (input.items.length === 0) throw new Error("Cart cannot be empty");
 
-    const catalog = await db.select().from(products).where(and(eq(products.isActive, 1)));
+  const catalog = await db.select().from(products).where(and(eq(products.isActive, 1)));
   const lines = buildOrderLines(input.items, catalog);
-  const selectedProducts = input.items.map((item) => catalog.find((product) => product.id === item.productId)).filter(Boolean) as Product[];
-  const requiresDeliverySlot = selectedProducts.some((product) => product.deliveryType === "chilled" || ["Fresh fruits", "Fresh vegetables", "Milk", "Cultured dairy", "Cheese", "Frozen & sweets"].includes(product.category));
-  if (requiresDeliverySlot && !input.deliverySlot) throw new Error("A delivery slot is required for fresh or chilled products");
+
   const amountInr = lines.reduce((total, line) => total + line.lineTotalInr, 0);
   const result = await db.insert(orders).values({
     status: "pending",
@@ -328,12 +318,11 @@ export async function createPendingOrder(input: {
     customerName: input.customerName,
     customerEmail: input.customerEmail,
     customerPhone: input.customerPhone,
-    deliverySlot: input.deliverySlot,
     invoiceToken: nanoid(32),
     invoiceTokenExpiresAt: getTrackingTokenExpiry(),
   });
   const orderId = Number(result[0].insertId);
   await db.insert(orderItems).values(lines.map((line) => ({ ...line, orderId })));
   const persisted = (await db.select({ invoiceToken: orders.invoiceToken, invoiceTokenExpiresAt: orders.invoiceTokenExpiresAt }).from(orders).where(eq(orders.id, orderId)).limit(1))[0];
-  return { orderId, amountInr, items: lines, deliverySlot: input.deliverySlot, invoiceToken: persisted?.invoiceToken ?? "", invoiceTokenExpiresAt: persisted?.invoiceTokenExpiresAt ?? getTrackingTokenExpiry() };
+  return { orderId, amountInr, items: lines, invoiceToken: persisted?.invoiceToken ?? "", invoiceTokenExpiresAt: persisted?.invoiceTokenExpiresAt ?? getTrackingTokenExpiry() };
 }

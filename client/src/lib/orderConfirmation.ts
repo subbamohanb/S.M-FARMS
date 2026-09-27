@@ -4,7 +4,6 @@ export type OrderConfirmation = {
   localOrderId: number;
   amountInr: number;
   paymentMethod: "cod";
-  deliverySlot?: string;
   invoiceToken: string;
   invoiceTokenExpiresAt: string | Date;
   items: ConfirmationItem[];
