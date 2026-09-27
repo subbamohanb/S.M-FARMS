@@ -45,7 +45,14 @@ describe("Home rendered featured products", () => {
     expect(output).toContain("Featured farm picks");
     expect(output).toContain("NeemShield Botanical Concentrate");
     expect(output).toContain("Daily Cow Milk");
+    expect(output).toContain("Care in every crop and every can.");
+    expect(output).toContain("Grow with the field, not against it.");
+    expect(output).toContain("Freshness handled with discipline.");
     expect(renderer.root.findAll((node) => node.props.className?.includes("hero-reel-frame"))).toHaveLength(3);
+    const motionToggle = renderer.root.find((node) => node.props["aria-label"] === "Pause farm background animation");
+    expect(motionToggle).toBeTruthy();
+    act(() => { (motionToggle.props.onClick as () => void)(); });
+    expect(renderer.root.find((node) => node.props["aria-label"] === "Play farm background animation")).toBeTruthy();
 
     const addButtons = renderer.root.findAll((node) => node.type === "button" && node.children.includes("Add"));
     expect(addButtons.length).toBeGreaterThan(0);

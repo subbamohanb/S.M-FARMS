@@ -14,6 +14,8 @@ import {
   Leaf,
   Loader2,
   Menu,
+  Pause,
+  Play,
   Search,
   ShieldCheck,
   ShoppingBag,
@@ -79,6 +81,7 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "cod">("razorpay");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isHeroReelPlaying, setIsHeroReelPlaying] = useState(true);
   const [razorpayInitializing, setRazorpayInitializing] = useState(false);
   const [gatewayError, setGatewayError] = useState<string | null>(null);
   const checkoutOrder = trpc.orders.checkout.useMutation();
@@ -172,7 +175,7 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="relative overflow-hidden bg-[#203c2b] text-[#fffdf8]">
+        <section className={`relative overflow-hidden bg-[#203c2b] text-[#fffdf8] ${isHeroReelPlaying ? "" : "hero-reel-paused"}`}>
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             {heroReel.map((frame, index) => <img key={frame.src} src={frame.src} alt="" className="hero-reel-frame absolute inset-0 h-full w-full object-cover object-center" style={{ animationDelay: `${index * 4}s` }} />)}
           </div>
@@ -186,6 +189,20 @@ export default function Home() {
               <div className="mt-9 flex flex-wrap gap-3"><a href="/agri-farm" className="inline-flex items-center gap-3 rounded-full bg-[#d5962b] px-6 py-3.5 text-sm font-extrabold text-[#203026] transition hover:bg-[#e4ad45] active:scale-95">Shop crop care <ArrowRight size={17} /></a><a href="#why-us" className="inline-flex items-center gap-3 rounded-full border border-white/35 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/10">Why S.M FARMS</a></div>
             </div>
             <div className="absolute bottom-7 right-5 hidden max-w-[215px] border-l border-[#e9b65f]/70 pl-4 text-sm leading-5 text-[#e9efe5] lg:block">From soil health to home dairy, practical products for the work that matters.</div>
+            <button type="button" className="absolute bottom-6 left-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-[#203c2b]/55 px-3.5 py-2 text-xs font-bold text-white backdrop-blur-sm transition hover:bg-[#203c2b]/80 focus-visible:outline-[#e9b65f]" aria-label={isHeroReelPlaying ? "Pause farm background animation" : "Play farm background animation"} aria-pressed={!isHeroReelPlaying} onClick={() => setIsHeroReelPlaying((playing) => !playing)}>
+              {isHeroReelPlaying ? <Pause size={14} /> : <Play size={14} />}
+              {isHeroReelPlaying ? "Pause motion" : "Play motion"}
+            </button>
+          </div>
+        </section>
+
+        <section id="farm-process" className="border-b border-[#d9d4c8] bg-[#fffdf8]" aria-labelledby="farm-process-title">
+          <div className="container py-16 md:py-20">
+            <div className="max-w-[720px]"><p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#b84f35]">From field to doorstep</p><h2 id="farm-process-title" className="mt-4 font-serif text-4xl font-bold leading-[.95] tracking-[-.06em] text-[#203c2b] md:text-6xl">Care in every crop and every can.</h2><p className="mt-5 max-w-[620px] text-sm leading-6 text-[#657164] md:text-base">We keep the work practical and transparent — nurturing healthier fields, handling dairy with care, and choosing dependable essentials for Indian growers and families.</p></div>
+            <div className="mt-10 grid gap-5 lg:grid-cols-2">
+              <article className="relative overflow-hidden rounded-[28px] bg-[#dbe3c9] p-7 md:p-9"><img src={cropImage} alt="Farmer tending a healthy crop field" className="absolute inset-0 h-full w-full object-cover opacity-20" /><div className="relative"><div className="flex items-center justify-between"><span className="rounded-full bg-[#203c2b] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#f5e9d3]">Agri farm</span><Leaf className="text-[#b84f35]" size={24} /></div><h3 className="mt-8 font-serif text-3xl font-bold tracking-[-0.04em] text-[#203c2b]">Grow with the field, not against it.</h3><div className="mt-7 grid gap-5 sm:grid-cols-3">{["Read the soil", "Choose the right care", "Check every season"].map((step, index) => <div key={step} className="border-t border-[#203c2b]/20 pt-3"><span className="text-xs font-black text-[#b84f35]">0{index + 1}</span><p className="mt-2 text-sm font-extrabold text-[#203c2b]">{step}</p></div>)}</div><p className="mt-7 max-w-[420px] text-sm leading-6 text-[#506154]">We start with soil and crop needs, then pair biological inputs, nutrition, and protection products with clear pack guidance.</p></div></article>
+              <article className="relative overflow-hidden rounded-[28px] bg-[#f1e1b9] p-7 md:p-9"><img src={dairyImage} alt="Fresh dairy products prepared with care" className="absolute inset-0 h-full w-full object-cover opacity-20" /><div className="relative"><div className="flex items-center justify-between"><span className="rounded-full bg-[#b84f35] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#fffdf8]">Dairy farm</span><Sparkles className="text-[#b84f35]" size={24} /></div><h3 className="mt-8 font-serif text-3xl font-bold tracking-[-0.04em] text-[#203c2b]">Freshness handled with discipline.</h3><div className="mt-7 grid gap-5 sm:grid-cols-3">{["Care for the herd", "Chill after collection", "Pack for the table"].map((step, index) => <div key={step} className="border-t border-[#203c2b]/20 pt-3"><span className="text-xs font-black text-[#b84f35]">0{index + 1}</span><p className="mt-2 text-sm font-extrabold text-[#203c2b]">{step}</p></div>)}</div><p className="mt-7 max-w-[420px] text-sm leading-6 text-[#506154]">Our dairy line follows a simple promise: careful handling, temperature-aware delivery, and honest essentials ready for everyday use.</p></div></article>
+            </div>
           </div>
         </section>
 
