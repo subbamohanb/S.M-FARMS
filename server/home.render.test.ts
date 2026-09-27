@@ -45,6 +45,7 @@ describe("Home rendered featured products", () => {
     expect(output).toContain("Featured farm picks");
     expect(output).toContain("NeemShield Botanical Concentrate");
     expect(output).toContain("Daily Cow Milk");
+    expect(renderer.root.findAll((node) => node.props.className?.includes("hero-reel-frame"))).toHaveLength(3);
 
     const addButtons = renderer.root.findAll((node) => node.type === "button" && node.children.includes("Add"));
     expect(addButtons.length).toBeGreaterThan(0);

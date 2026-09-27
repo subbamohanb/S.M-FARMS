@@ -101,6 +101,19 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 @media (min-width: 640px) { .container { padding-inline: 1.5rem; } }
 @media (min-width: 1024px) { .container { max-width: 1280px; padding-inline: 2rem; } }
 
+.hero-reel-frame {
+  opacity: 0;
+  transform: scale(1.04);
+  animation: hero-reel-fade 12s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+@keyframes hero-reel-fade {
+  0%, 30% { opacity: 0; transform: scale(1.04); }
+  8%, 23% { opacity: .72; transform: scale(1); }
+  38%, 100% { opacity: 0; transform: scale(1.04); }
+}
+
 ::selection { background: #d5962b; color: #203026; }
 
 @media (prefers-reduced-motion: reduce) {

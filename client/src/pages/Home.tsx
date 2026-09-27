@@ -26,6 +26,11 @@ const heroImage = "/manus-storage/sm-farms-hero_dd17816a.jpg";
 const cropImage = "/manus-storage/sm-farms-cropcare_8a488500.jpg";
 const dairyImage = "/manus-storage/sm-farms-dairy_e47f9baa.jpg";
 const logoImage = "/manus-storage/sm-farms-logo_30b01d3b.png";
+const heroReel = [
+  { src: heroImage, alt: "Farmer holding soil and a seedling" },
+  { src: cropImage, alt: "Healthy crop rows in a farm field" },
+  { src: dairyImage, alt: "Fresh dairy essentials from the farm" },
+];
 
 type Product = {
   id: number;
@@ -168,8 +173,11 @@ export default function Home() {
 
       <main id="top">
         <section className="relative overflow-hidden bg-[#203c2b] text-[#fffdf8]">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(20,45,31,.96)_0%,rgba(20,45,31,.78)_42%,rgba(20,45,31,.1)_85%)]" />
-          <img src={heroImage} alt="Farmer holding soil and a seedling" className="absolute inset-0 h-full w-full object-cover object-center opacity-75" />
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            {heroReel.map((frame, index) => <img key={frame.src} src={frame.src} alt="" className="hero-reel-frame absolute inset-0 h-full w-full object-cover object-center" style={{ animationDelay: `${index * 4}s` }} />)}
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(20,45,31,.96)_0%,rgba(20,45,31,.82)_42%,rgba(20,45,31,.32)_85%)]" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,45,31,.2)_0%,rgba(20,45,31,.18)_45%,rgba(20,45,31,.68)_100%)]" aria-hidden="true" />
           <div className="container relative flex min-h-[540px] items-end py-20 md:min-h-[610px] md:items-center md:py-24">
             <div className="max-w-[650px] animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="mb-7 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.22em] text-[#e9b65f]"><span className="h-px w-9 bg-[#e9b65f]" /> The farm-to-field store</div>
