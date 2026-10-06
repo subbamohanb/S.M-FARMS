@@ -51,6 +51,9 @@ describe("Home rendered featured products", () => {
     expect(output).toContain("Freshness handled with discipline.");
     expect(output).toContain("We look at soil texture, moisture, and crop stage");
     expect(output).toContain("Temperature-aware handling helps protect freshness");
+    expect(output).toContain("Explore Agri Farm through animated video");
+    expect(output).toContain("Explore Dairy Farm through animated video");
+    expect(renderer.root.findAll((node) => node.type === "video")).toHaveLength(6);
     expect(output).toContain("Switch to dark theme");
     expect(renderer.root.findAll((node) => node.type === "details")).toHaveLength(6);
     expect(renderer.root.findAll((node) => node.props.className?.includes("hero-reel-frame"))).toHaveLength(3);
