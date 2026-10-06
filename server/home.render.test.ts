@@ -48,6 +48,9 @@ describe("Home rendered featured products", () => {
     expect(output).toContain("Care in every crop and every can.");
     expect(output).toContain("Grow with the field, not against it.");
     expect(output).toContain("Freshness handled with discipline.");
+    expect(output).toContain("We look at soil texture, moisture, and crop stage");
+    expect(output).toContain("Temperature-aware handling helps protect freshness");
+    expect(renderer.root.findAll((node) => node.type === "details")).toHaveLength(6);
     expect(renderer.root.findAll((node) => node.props.className?.includes("hero-reel-frame"))).toHaveLength(3);
     const motionToggle = renderer.root.find((node) => node.props["aria-label"] === "Pause farm background animation");
     expect(motionToggle).toBeTruthy();
