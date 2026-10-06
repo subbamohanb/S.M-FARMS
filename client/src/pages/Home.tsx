@@ -7,6 +7,7 @@ import { PaymentMethodSelector } from "@/components/PaymentMethodSelector";
 import { PaymentRecoveryPrompt } from "@/components/PaymentRecoveryPrompt";
 import { saveOrderConfirmation } from "@/lib/orderConfirmation";
 import { openRazorpayCheckout } from "@/lib/razorpay";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   ArrowRight,
   ChevronDown,
@@ -14,12 +15,14 @@ import {
   Leaf,
   Loader2,
   Menu,
+  Moon,
   Pause,
   Play,
   Search,
   ShieldCheck,
   ShoppingBag,
   Sparkles,
+  Sun,
   Truck,
   X,
 } from "lucide-react";
@@ -75,6 +78,7 @@ export function mapFeaturedProducts(catalogProducts: Array<{ id: number; name: s
 }
 
 export default function Home() {
+  const { theme, toggleTheme } = useTheme();
   const [activeCategory, setActiveCategory] = useState("All products");
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Product[]>([]);
@@ -164,6 +168,7 @@ export default function Home() {
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products" className="w-32 bg-transparent text-sm outline-none placeholder:text-[#929a8d]" />
             </label>
             <button className="hidden rounded-full p-3 text-[#506154] transition-colors hover:bg-white md:block" aria-label="Wishlist" onClick={() => toast("Your wishlist is ready for later")}> <Heart size={18} /> </button>
+            <button className="rounded-full border border-[#d9d4c8] p-3 text-[#506154] transition-colors hover:bg-white dark:border-[#486c53] dark:text-[#f3c766] dark:hover:bg-[#173b27]" aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"} onClick={() => toggleTheme?.()}>{theme === "light" ? <Moon size={17} /> : <Sun size={17} />}</button>
             <button className="relative rounded-full bg-[#d5962b] p-3 text-[#203026] transition-transform hover:scale-105 active:scale-95" aria-label="Open cart" onClick={() => setCartOpen(true)}>
               <ShoppingBag size={18} />
               {cart.length > 0 && <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#b84f35] px-1 text-[10px] font-bold text-white">{cart.length}</span>}

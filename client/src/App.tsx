@@ -33,7 +33,7 @@ function Router() {
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="light">
+    <ThemeProvider defaultTheme="light" switchable>
       <TooltipProvider>
         <Toaster />
         <Router />

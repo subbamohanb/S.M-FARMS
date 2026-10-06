@@ -79,6 +79,34 @@
   --sidebar-ring: oklch(0.71 0.13 78);
 }
 
+.dark {
+  --primary: oklch(0.78 0.13 78);
+  --primary-foreground: oklch(0.18 0.04 150);
+  --background: oklch(0.16 0.045 150);
+  --foreground: oklch(0.94 0.025 88);
+  --card: oklch(0.21 0.055 150);
+  --card-foreground: oklch(0.94 0.025 88);
+  --popover: oklch(0.2 0.05 150);
+  --popover-foreground: oklch(0.94 0.025 88);
+  --secondary: oklch(0.25 0.055 150);
+  --secondary-foreground: oklch(0.9 0.035 88);
+  --muted: oklch(0.24 0.045 150);
+  --muted-foreground: oklch(0.74 0.035 88);
+  --accent: oklch(0.78 0.13 78);
+  --accent-foreground: oklch(0.18 0.04 150);
+  --border: oklch(0.34 0.06 150);
+  --input: oklch(0.3 0.055 150);
+  --ring: oklch(0.78 0.13 78);
+  --sidebar: oklch(0.14 0.04 150);
+  --sidebar-foreground: oklch(0.94 0.025 88);
+  --sidebar-primary: oklch(0.78 0.13 78);
+  --sidebar-primary-foreground: oklch(0.18 0.04 150);
+  --sidebar-accent: oklch(0.25 0.055 150);
+  --sidebar-accent-foreground: oklch(0.94 0.025 88);
+  --sidebar-border: oklch(0.34 0.06 150);
+  --sidebar-ring: oklch(0.78 0.13 78);
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -88,6 +116,17 @@ body {
   font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+.dark body { background: #081b12; color: #f3ecd7; }
+.dark [class*="bg-[#f8f5ee]"] { background-color: #0b2417 !important; }
+.dark [class*="bg-[#fffdf8]"] { background-color: #102d1d !important; }
+.dark [class*="bg-[#f1e9da]"] { background-color: #173b27 !important; }
+.dark [class*="bg-[#dbe3c9]"] { background-color: #1b4a2d !important; }
+.dark [class*="bg-[#f1e1b9]"] { background-color: #4a3818 !important; }
+.dark [class*="border-[#d9d4c8]"] { border-color: #31583d !important; }
+.dark [class*="text-[#203c2b]"] { color: #f3ecd7 !important; }
+.dark [class*="text-[#506154]"] { color: #c1d0bc !important; }
+.dark [class*="text-[#657164]"] { color: #b9c9b7 !important; }
+.dark [class*="placeholder:text-[#929a8d]"]::placeholder { color: #9eb39d !important; }
 .font-serif { font-family: "DM Serif Display", Georgia, serif; }
 button, a, input { font: inherit; }
 button:not(:disabled), a[href], input { cursor: pointer; }

@@ -16,6 +16,7 @@ vi.mock("@/lib/trpc", () => ({
 vi.mock("@/lib/checkout", () => ({ aggregateCartItems: (items: unknown[]) => items }));
 vi.mock("@/lib/orderConfirmation", () => ({ saveOrderConfirmation: vi.fn() }));
 vi.mock("@/lib/razorpay", () => ({ openRazorpayCheckout: vi.fn() }));
+vi.mock("@/contexts/ThemeContext", () => ({ useTheme: () => ({ theme: "light", toggleTheme: vi.fn(), switchable: true }) }));
 vi.mock("sonner", () => ({ toast: Object.assign(vi.fn(), { success: vi.fn(), error: vi.fn() }) }));
 vi.mock("@/components/CheckoutPaymentButton", () => ({ CheckoutPaymentButton: () => React.createElement("button", null, "Checkout") }));
 vi.mock("@/components/PaymentMethodSelector", () => ({ PaymentMethodSelector: () => React.createElement("div", null, "Payment method") }));
@@ -50,6 +51,7 @@ describe("Home rendered featured products", () => {
     expect(output).toContain("Freshness handled with discipline.");
     expect(output).toContain("We look at soil texture, moisture, and crop stage");
     expect(output).toContain("Temperature-aware handling helps protect freshness");
+    expect(output).toContain("Switch to dark theme");
     expect(renderer.root.findAll((node) => node.type === "details")).toHaveLength(6);
     expect(renderer.root.findAll((node) => node.props.className?.includes("hero-reel-frame"))).toHaveLength(3);
     const motionToggle = renderer.root.find((node) => node.props["aria-label"] === "Pause farm background animation");
