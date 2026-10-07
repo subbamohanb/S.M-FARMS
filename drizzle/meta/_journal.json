@@ -1,0 +1,76 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1786857699945,
+      "tag": "0000_abandoned_piledriver",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786869968857,
+      "tag": "0001_skinny_skreet",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786870640661,
+      "tag": "0002_sparkling_killmonger",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1786874903279,
+      "tag": "0003_fixed_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1786885051255,
+      "tag": "0004_absent_carnage",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1786905383580,
+      "tag": "0005_salty_ender_wiggin",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1786905751617,
+      "tag": "0006_previous_martin_li",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1786907147682,
+      "tag": "0007_quiet_nitro",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1787152844661,
+      "tag": "0008_tense_magus",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1787152902389,
+      "tag": "0009_tearful_gwen_stacy",
+      "breakpoints": true
+    }
+  ]
+}

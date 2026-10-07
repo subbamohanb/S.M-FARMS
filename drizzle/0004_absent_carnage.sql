@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD `paymentMethod` enum('razorpay','cod') DEFAULT 'razorpay' NOT NULL;
