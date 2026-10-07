@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { getProductsByBusiness } from "./db";
+import { withCatalogFallback } from "../client/src/lib/catalogFallback";
 
 describe("catalog offers", () => {
   it("exposes expanded Agri Farm and Dairy Farm products with compare-at pricing", async () => {
@@ -36,5 +37,12 @@ describe("catalog offers", () => {
     expect(home).toContain("Fresh starts for every farm.");
     expect(home).toContain("Featured farm picks");
     expect(home).toContain("trpc.products.all.useQuery");
+  });
+
+  it("shows fallback products when a business catalog response is empty", () => {
+    const fallback = [{ name: "Fallback product" }];
+    expect(withCatalogFallback([], fallback)).toEqual(fallback);
+    expect(withCatalogFallback(undefined, fallback)).toEqual(fallback);
+    expect(withCatalogFallback([{ name: "Live product" }], fallback)).toEqual([{ name: "Live product" }]);
   });
 });

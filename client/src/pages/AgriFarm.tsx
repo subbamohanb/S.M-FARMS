@@ -10,6 +10,7 @@ import { PaymentRecoveryPrompt } from "@/components/PaymentRecoveryPrompt";
 import { saveOrderConfirmation } from "@/lib/orderConfirmation";
 import { PaymentMethodSelector } from "@/components/PaymentMethodSelector";
 import { openRazorpayCheckout } from "@/lib/razorpay";
+import { withCatalogFallback } from "@/lib/catalogFallback";
 
 const logoImage = "/manus-storage/sm-farms-logo_30b01d3b.png";
 const agriHero = "/manus-storage/sm-farms-hero_dd17816a.jpg";
@@ -34,7 +35,8 @@ export default function AgriFarm() {
   const [razorpayInitializing, setRazorpayInitializing] = useState(false);
   const [gatewayError, setGatewayError] = useState<string | null>(null);
   const { data: dbProducts, isLoading } = trpc.products.byBusiness.useQuery({ business: "agri" }, { refetchOnMount: "always" });
-  const products = dbProducts?.map((p) => ({ id: p.id, name: p.name, category: p.category, price: `₹${p.priceInr}`, priceInr: p.priceInr, compareAtPrice: p.compareAtPriceInr ? `₹${p.compareAtPriceInr}` : undefined, offerLabel: p.offerLabel, pack: p.pack, label: p.label, image: p.imageUrl, note: p.note, stockQuantity: p.stockQuantity })) ?? fallbackProducts.map((p, index) => ({ ...p, id: index + 1, priceInr: Number(p.price.replace(/[^0-9]/g, "")), compareAtPrice: p.compareAtPrice ?? undefined, offerLabel: p.offerLabel ?? null, stockQuantity: 18 }));
+  const liveProducts = dbProducts?.map((p) => ({ id: p.id, name: p.name, category: p.category, price: `₹${p.priceInr}`, priceInr: p.priceInr, compareAtPrice: p.compareAtPriceInr ? `₹${p.compareAtPriceInr}` : undefined, offerLabel: p.offerLabel, pack: p.pack, label: p.label, image: p.imageUrl, note: p.note, stockQuantity: p.stockQuantity }));
+  const products = withCatalogFallback(liveProducts, fallbackProducts.map((p, index) => ({ ...p, id: index + 1, priceInr: Number(p.price.replace(/[^0-9]/g, "")), compareAtPrice: p.compareAtPrice ?? undefined, offerLabel: p.offerLabel ?? null, stockQuantity: 18 })));
   const categories = useMemo(() => ["All products", ...Array.from(new Set(products.map((p) => p.category)))], [products]);
   const visible = useMemo(() => {
     const filtered = products.filter((p) => (activeCategory === "All products" || p.category === activeCategory) && `${p.name} ${p.category}`.toLowerCase().includes(query.toLowerCase()));

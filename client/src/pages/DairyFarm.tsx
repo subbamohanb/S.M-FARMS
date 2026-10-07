@@ -10,6 +10,7 @@ import { PaymentRecoveryPrompt } from "@/components/PaymentRecoveryPrompt";
 import { saveOrderConfirmation } from "@/lib/orderConfirmation";
 import { PaymentMethodSelector } from "@/components/PaymentMethodSelector";
 import { openRazorpayCheckout } from "@/lib/razorpay";
+import { withCatalogFallback } from "@/lib/catalogFallback";
 
 const logoImage = "/manus-storage/sm-farms-logo_30b01d3b.png";
 const dairyHero = "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1600&q=85";
@@ -34,7 +35,8 @@ export default function DairyFarm() {
   const [razorpayInitializing, setRazorpayInitializing] = useState(false);
   const [gatewayError, setGatewayError] = useState<string | null>(null);
   const { data: dbProducts, isLoading } = trpc.products.byBusiness.useQuery({ business: "dairy" }, { refetchOnMount: "always" });
-  const products = dbProducts?.map((p) => ({ id: p.id, name: p.name, type: p.category, price: `₹${p.priceInr}`, priceInr: p.priceInr, compareAtPrice: p.compareAtPriceInr ? `₹${p.compareAtPriceInr}` : undefined, offerLabel: p.offerLabel, pack: p.pack, label: p.label, image: p.imageUrl, note: p.note, stockQuantity: p.stockQuantity })) ?? fallbackProducts.map((p, index) => ({ ...p, id: index + 5, priceInr: Number(p.price.replace(/[^0-9]/g, "")), compareAtPrice: p.compareAtPrice ?? undefined, offerLabel: p.offerLabel ?? null, stockQuantity: 18 }));
+  const liveProducts = dbProducts?.map((p) => ({ id: p.id, name: p.name, type: p.category, price: `₹${p.priceInr}`, priceInr: p.priceInr, compareAtPrice: p.compareAtPriceInr ? `₹${p.compareAtPriceInr}` : undefined, offerLabel: p.offerLabel, pack: p.pack, label: p.label, image: p.imageUrl, note: p.note, stockQuantity: p.stockQuantity }));
+  const products = withCatalogFallback(liveProducts, fallbackProducts.map((p, index) => ({ ...p, id: index + 5, priceInr: Number(p.price.replace(/[^0-9]/g, "")), compareAtPrice: p.compareAtPrice ?? undefined, offerLabel: p.offerLabel ?? null, stockQuantity: 18 })));
   const categories = useMemo(() => ["All products", ...Array.from(new Set(products.map((p) => p.type)))], [products]);
   const visible = useMemo(() => {
     const filtered = products.filter((p) => (activeCategory === "All products" || p.type === activeCategory) && `${p.name} ${p.type}`.toLowerCase().includes(query.toLowerCase()));
