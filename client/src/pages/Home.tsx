@@ -30,8 +30,8 @@ import {
 const heroImage = "/manus-storage/sm-farms-hero_dd17816a.jpg";
 const cropImage = "/manus-storage/sm-farms-cropcare_8a488500.jpg";
 const dairyImage = "/manus-storage/sm-farms-dairy_e47f9baa.jpg";
-const agriVideo = "/manus-storage/sm-farms-agri-explainer_a0e7afd8.mp4";
-const dairyVideo = "/manus-storage/sm-farms-dairy-explainer_700489d9.mp4";
+const agriVideo = "/manus-storage/sm-farms-agri-loop_b209b92a.mp4";
+const dairyVideo = "/manus-storage/sm-farms-dairy-loop_817b031f.mp4";
 const logoImage = "/manus-storage/sm-farms-logo_30b01d3b.png";
 const heroReel = [
   { src: heroImage, alt: "Farmer holding soil and a seedling" },
