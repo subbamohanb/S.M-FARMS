@@ -43,6 +43,7 @@ describe("catalog offers", () => {
     const fallback = [{ name: "Fallback product" }];
     expect(withCatalogFallback([], fallback)).toEqual(fallback);
     expect(withCatalogFallback(undefined, fallback)).toEqual(fallback);
+    expect(withCatalogFallback(null as unknown as { name: string }[], fallback)).toEqual(fallback);
     expect(withCatalogFallback([{ name: "Live product" }], fallback)).toEqual([{ name: "Live product" }]);
   });
 });
