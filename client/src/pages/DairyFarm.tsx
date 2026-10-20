@@ -36,7 +36,7 @@ export default function DairyFarm() {
   const [gatewayError, setGatewayError] = useState<string | null>(null);
   const { data: dbProducts, isLoading } = trpc.products.byBusiness.useQuery({ business: "dairy" }, { refetchOnMount: "always" });
   const liveProducts = dbProducts?.map((p) => ({ id: p.id, name: p.name, type: p.category, price: `₹${p.priceInr}`, priceInr: p.priceInr, compareAtPrice: p.compareAtPriceInr ? `₹${p.compareAtPriceInr}` : undefined, offerLabel: p.offerLabel, pack: p.pack, label: p.label, image: p.imageUrl, note: p.note, stockQuantity: p.stockQuantity }));
-  const products = withCatalogFallback(liveProducts, fallbackProducts.map((p, index) => ({ ...p, id: index + 5, priceInr: Number(p.price.replace(/[^0-9]/g, "")), compareAtPrice: p.compareAtPrice ?? undefined, offerLabel: p.offerLabel ?? null, stockQuantity: 18 })));
+  const products = withCatalogFallback(liveProducts, fallbackProducts.map((p, index) => ({ ...p, id: index + 101, priceInr: Number(p.price.replace(/[^0-9]/g, "")), compareAtPrice: p.compareAtPrice ?? undefined, offerLabel: p.offerLabel ?? null, stockQuantity: 18 })));
   const categories = useMemo(() => ["All products", ...Array.from(new Set(products.map((p) => p.type)))], [products]);
   const visible = useMemo(() => {
     const filtered = products.filter((p) => (activeCategory === "All products" || p.type === activeCategory) && `${p.name} ${p.type}`.toLowerCase().includes(query.toLowerCase()));

@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, orderItems, orders, Product, products, pushTokens, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { catalogFallback, getFallbackProductsByBusiness } from "./catalogFallback";
 
 const TRACKING_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -100,24 +101,26 @@ export async function getProductsByBusiness(business: "agri" | "dairy") {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot list products: database not available");
-    return [];
+    return getFallbackProductsByBusiness(business);
   }
 
-  return db
+  const liveProducts = await db
     .select()
     .from(products)
     .where(and(eq(products.business, business), eq(products.isActive, 1)))
     .orderBy(asc(products.id));
+  return liveProducts.length > 0 ? liveProducts : getFallbackProductsByBusiness(business);
 }
 
 export async function getAllProducts() {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot list products: database not available");
-    return [];
+    return catalogFallback;
   }
 
-  return db.select().from(products).where(eq(products.isActive, 1)).orderBy(asc(products.id));
+  const liveProducts = await db.select().from(products).where(eq(products.isActive, 1)).orderBy(asc(products.id));
+  return liveProducts.length > 0 ? liveProducts : catalogFallback;
 }
 
 export type PendingOrderItemInput = { productId: number; quantity: number };
@@ -307,7 +310,8 @@ export async function createPendingOrder(input: {
   if (!db) throw new Error("Database is not available");
   if (input.items.length === 0) throw new Error("Cart cannot be empty");
 
-  const catalog = await db.select().from(products).where(and(eq(products.isActive, 1)));
+  const liveCatalog = await db.select().from(products).where(and(eq(products.isActive, 1)));
+  const catalog = liveCatalog.length > 0 ? liveCatalog : catalogFallback;
   const lines = buildOrderLines(input.items, catalog);
 
   const amountInr = lines.reduce((total, line) => total + line.lineTotalInr, 0);
